@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>view medicine</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <table class="table mt-3" id="medicineTable">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>cost</th>
+        </tr>
+    </thead>
+       
+   
+    <tbody>
+        <tr>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

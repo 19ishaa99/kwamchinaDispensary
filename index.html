@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KWAMCHINA DISPENSARY DASHBOARD</title>
+  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>-->
+  <link href="bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { background-color: #f8f9fa; }
+    .card-icon { font-size: 1.5rem; }
+    .summary-card { transition: 0.3s ease-in-out; }
+    .summary-card:hover { transform: scale(1.03); }
+    .activity-log { max-height: 200px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <header class="d-flex justify-content-between align-items-center mb-4">
+      <h3>🩺 KWAMCHINA DISPENSARY DASHBOARD</h3>
+      <div><span id="dateTime" class="text-muted"></span></div>
+    </header>
+ 
+      
+
+    <!-- Summary Cards -->
+    <div class="row text-center mb-4">
+        <!-- Total Income -->
+<div class="col-md-3">
+  <div class="card summary-card text-bg-success">
+    <div class="card-body">
+      <div class="card-icon">💰</div>
+      <button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#incomeModal">
+        <h6>Total Income</h6>
+        <p>TZS 1,250,000</p>
+      </button>
+    </div>
+  </div>
+</div>
+      <div class="col-md-3">
+  <div class="card summary-card text-bg-danger">
+    <div class="card-body">
+      <div class="card-icon">💸</div>
+      <button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#expensesModal">
+        <h6>Total Expenses</h6>
+        <p>TZS 760,000</p>
+      </button>
+    </div>
+  </div>
+</div>
+      <!-- Balance -->
+<div class="col-md-3">
+  <div class="card summary-card text-bg-primary">
+    <div class="card-body">
+      <div class="card-icon">📊</div>
+      <button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#balanceModal">
+        <h6>Balance</h6>
+        <p>TZS 490,000</p>
+      </button>
+    </div>
+  </div>
+</div>
+      <!-- Patients Today -->
+<div class="col-md-3">
+  <div class="card summary-card text-bg-info">
+    <div class="card-body">
+      <div class="card-icon">👥</div>
+      <button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#patientsModal">
+        <h6>Patients Today</h6>
+        <p>23</p>
+      </button>
+    </div>
+  </div>
+</div>
+    </div>
+
+    <!-- Charts + Actions -->
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">Monthly Overview</div>
+          <div class="card-body">
+            <canvas id="expenseChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-header">Quick Actions</div>
+          <div class="card-body d-grid gap-2">
+            <a href="patient_registration_form.html"
+            class="btn btn-outline-primary">➕ Add patient
+            </a>
+            <a href="medicine_form.html"
+            class="btn btn-outline-primary">➕ Add medicine
+            </a>
+            <a href="payment_form.html"
+           class="btn btn-outline-success">🧾 Record Payment
+          </a>
+            <a href="view_medicine.html" class="btn btn-outline-warning">🏥 View Inventory</a>
+            <a href="report.html" class="btn btn-outline-dark">📄 Generate Report</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">Notifications</div>
+          <ul class="list-group list-group-flush">
+           <li class="list-group-item">
+  <button class="btn btn-link text-danger text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#lowStockModal">
+    ⚠️ Low stock: Paracetamol
+  </button>
+</li>
+
+            <li class="list-group-item">
+  <button class="btn btn-link text-danger text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#unpaidModal">
+    ⚠️ View unpaid bills
+  </button>
+</li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Log -->
+    <div class="card">
+      <div class="card-header">Recent Activity</div>
+      <ul class="list-group list-group-flush activity-log">
+        <li class="list-group-item">New patient: Asha Suleiman</li>
+        <li class="list-group-item">Expense added: Electricity (TZS 45,000)</li>
+        <li class="list-group-item">Payment received: Zainab (TZS 10,000)</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="bootstrap.bundle.min.js"></script>
+  <script src="chart.js"></script>
+  <script>
+    // Set current time
+    document.getElementById('dateTime').textContent = new Date().toLocaleString();
+
+    // Simple chart
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [1,2,3,4,5,6,7,8,9,10,11,12],//expensive per hour
+        datasets: [{
+          label: 'Expenses',
+          data: [400, 600, 500, 650, 550, 760,600],
+          borderColor: 'red',
+          fill: false
+        }, {
+          label: 'Income',
+          data: [600, 850, 700, 900, 750, 1250,1000],
+          borderColor: 'green',
+          fill: false
+        }]
+      }
+    });
+  </script>
+  
+<!-- Income Modal -->
+<div class="modal fade" id="incomeModal" tabindex="-1" aria-labelledby="incomeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="incomeModalLabel">Income Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Breakdown of income sources:</p>
+        <ul>
+          <li>Consultation Fees: TZS 500,000</li>
+          <li>Medication Sales: TZS 600,000</li>
+          <li>Lab Services: TZS 150,000</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Expenses Modal -->
+<div class="modal fade" id="expensesModal" tabindex="-1" aria-labelledby="expensesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="expensesModalLabel">Expenses Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Breakdown of expenses:</p>
+        <ul>
+          <li>Electricity: TZS 45,000</li>
+          <li>Medical Supplies: TZS 500,000</li>
+          <li>Staff Salaries: TZS 215,000</li>
+        </ul>
+        <a href="expenses.html">
+        <button class="btn btn-link" name="record expense">Record</button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Balance Modal -->
+<div class="modal fade" id="balanceModal" tabindex="-1" aria-labelledby="balanceModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="balanceModalLabel">Balance Summary</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Current financial balance:</p>
+        <ul>
+          <li>Total Income: TZS 1,250,000</li>
+          <li>Total Expenses: TZS 760,000</li>
+          <li><strong>Remaining Balance: TZS 490,000</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Patients Today Modal -->
+<div class="modal fade" id="patientsModal" tabindex="-1" aria-labelledby="patientsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="patientsModalLabel">Today's Patients</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Patients registered today:</p>
+        <ul>
+          <li>Asha Suleiman</li>
+          <li>Zainab Bakari</li>
+          <li>Joseph Mussa</li>
+          <!-- Add more names dynamically if needed -->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Low Stock Modal -->
+<div class="modal fade" id="lowStockModal" tabindex="-1" aria-labelledby="lowStockModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lowStockModalLabel">📉 Low Stock Medicines</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="printArea">
+        <p>The following medicines are below the minimum stock level:</p>
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Medicine Name</th>
+              <th>Current Quantity</th>
+              <th>Minimum Required</th>
+              <th>Needed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Paracetamol</td>
+              <td>12</td>
+              <td>50</td>
+              <td>38</td>
+            </tr>
+            <tr>
+              <td>Amoxicillin</td>
+              <td>8</td>
+              <td>30</td>
+              <td>22</td>
+            </tr>
+           
+            <!-- You can add more rows here -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="printLowStock()">🖨️ Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function printLowStock() {
+  const printContents = document.getElementById('printArea').innerHTML;
+  const originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = `
+    <html>
+      <head>
+        <title>Low Stock Report</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+          th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+          th { background-color: #f0f0f0; }
+        </style>
+      </head>
+      <body>
+        <h2>Kamchina Dispensary – Low Stock Report</h2>
+        <p>Date: ${new Date().toLocaleDateString()}</p>
+        ${printContents}
+        <br><br>
+        <p>Signature: ____________________________</p>
+      </body>
+    </html>
+  `;
+
+  window.print();
+  document.body.innerHTML = originalContents;
+  location.reload();
+}
+</script>
+
+<!-- Unpaid Bills Modal -->
+<div class="modal fade" id="unpaidModal" tabindex="-1" aria-labelledby="unpaidModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="unpaidModalLabel">💰 Unpaid Bills</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Patient Name</th>
+              <th>Amount Due (TZS)</th>
+            </tr>
+          </thead>
+          <tbody id="unpaidTableBody">
+            <!-- Data will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('unpaidModal').addEventListener('show.bs.modal', function () {
+  fetch('unpaid_bills.php')
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('unpaidTableBody');
+      tbody.innerHTML = ''; // Clear previous rows
+      data.forEach(item => {
+        const row = `<tr>
+          <td>${item.patient_name}</td>
+          <td>${item.amount_due}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    });
+});
+</script>
+
+</body>
+</html>
