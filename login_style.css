@@ -1,3 +1,4 @@
+
  
   body {
   background: linear-gradient(to right, #e0f7fa, #f1f8e9);
@@ -16,3 +17,22 @@
 .btn-primary:hover {
   background-color: #0056b3;
 }
+ 
+  body {
+  background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+

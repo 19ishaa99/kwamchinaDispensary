@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>EXPENSES</title>
+</head>
+<body>
+  <?php include 'database/sidebar.php'; ?>
+<div class="main-content">
+    <!-- Page content goes here -->
+     <div class="card shadow-sm mt-5">
+  <div class="card-header bg-info text-white">💰 Record Expense</div>
+  <div class="card-body">
+    <form action="database/save_expenses.php" method="POST" class="row g-3">
+      <div class="col-md-6">
+        <label for="expense_title" class="form-label">Expense Title</label>
+        <input type="text" name="expense_title" id="expense_title" class="form-control" placeholder="e.g. Lab Equipment" required />
+      </div>
+
+      <div class="col-md-3">
+        <label for="amount" class="form-label">Amount (TSh)</label>
+        <input type="number" name="amount" id="amount" class="form-control" min="0" required />
+      </div>
+
+      <div class="col-md-3">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" name="date" id="date" class="form-control" value="<?= date('Y-m-d') ?>" required />
+      </div>
+
+      <div class="col-md-6">
+        <label for="issued_by" class="form-label">Issued By</label>
+        <input type="text" name="issued_by" id="issued_by" class="form-control" placeholder="e.g. Nurse Fatma" required />
+      </div>
+
+      <div class="col-md-6">
+        <label for="category" class="form-label">Category</label>
+        <select name="category" id="category" class="form-select" required>
+          <option value="">-- Select Category --</option>
+          <option value="Medical Supplies">Medical Supplies</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Staff Welfare">Staff Welfare</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="col-md-12">
+        <label for="notes" class="form-label">Notes / Justification</label>
+        <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="Explain why this expense was necessary..."></textarea>
+      </div>
+
+      <div class="col-md-12 text-end">
+        <button type="submit" class="btn btn-success">💾 Save Expense</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</div>
+
+
+</body>
+</html>
