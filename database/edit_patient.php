@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($patient['phone']) ?>" required>
     </div>
     <button type="submit" class="btn btn-primary">Update Patient</button>
-    <a href="view_patient.php" class="btn btn-secondary">Back</a>
+    <a href="../view_patient.php" class="btn btn-secondary">Back</a>
   </form>
 
 </body>

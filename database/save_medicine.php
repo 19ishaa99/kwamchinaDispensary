@@ -9,24 +9,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantity    = (int)$_POST['quantity'];
     $price       = (float)$_POST['price'];
     $expiry_date = $_POST['expiry_date'];
+    $added_date;
 
     try {
         $pdo->beginTransaction();
 
         // 1️⃣ Insert into medicines table
         $stmt = $pdo->prepare("
-            INSERT INTO medicines (name, type, unit_price, expiry_date)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO medicines (name, type, unit_price,quantity)
+            VALUES (?, ?, ?,?)
         ");
-        $stmt->execute([$name, $type, $price, $expiry_date]);
+        $stmt->execute([$name, $type, $price,$quantity]);
         $medicine_id = $pdo->lastInsertId();
 
         // 2️⃣ Insert initial stock into medicine_stock
         $stmt = $pdo->prepare("
-            INSERT INTO medicine_stock (medicine_id, quantity)
-            VALUES (?, ?)
+            INSERT INTO medicine_stock (medicine_id, quantity,expire_date)
+            VALUES (?, ?,?)
         ");
-        $stmt->execute([$medicine_id, $quantity]);
+        $stmt->execute([$medicine_id, $quantity,$expiry_date]);
 
         $pdo->commit();
 

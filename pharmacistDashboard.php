@@ -24,7 +24,7 @@ try {
     $lowStockCount = $stmt->fetchColumn() ?: 0;
 
     // Expired medicines
-    $stmt = $pdo->query("SELECT COUNT(*) FROM medicines WHERE expiry_date < CURDATE()");
+    $stmt = $pdo->query("SELECT COUNT(*) FROM medicine_stock WHERE expire_date <= CURDATE() + INTERVAL 7 DAY AND quantity > 0");
     $expiredCount = $stmt->fetchColumn() ?: 0;
 
     // Recent lab tests added/updated
@@ -38,13 +38,15 @@ try {
 
     // Medicine summary for table
     $stmt = $pdo->query("
-        SELECT m.name, ms.quantity, m.unit_price, 
-               CASE WHEN ms.quantity < 10 THEN '⚠️ Low Stock' 
-                    WHEN m.expiry_date < CURDATE() THEN '❌ Expired' 
-                    ELSE '✅ OK' END AS status
-        FROM medicines m
-        JOIN medicine_stock ms ON m.medicine_id = ms.medicine_id
-        ORDER BY m.name ASC
+       SELECT m.name, ms.quantity, m.unit_price, 
+       CASE 
+           WHEN ms.quantity < 10 THEN '⚠️ Low Stock' 
+          WHEN ms.expire_date <= CURDATE() + INTERVAL 7 DAY THEN '⚠️ Expiring Soon' 
+           ELSE '✅ OK' 
+       END AS status
+FROM medicines m
+JOIN medicine_stock ms ON m.medicine_id = ms.medicine_id
+ORDER BY m.name ASC;
     ");
     $medicinesSummary = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -113,7 +115,7 @@ body { background-color: #f8f9fa; }
     <div class="col-md-4">
         <div class="card summary-card text-bg-danger">
             <div class="card-body">
-                <h6>❌ Expired Medicines</h6>
+                <h6>❌ Expiring Medicines</h6>
                 <p><?= $expiredCount ?></p>
             </div>
         </div>
@@ -225,7 +227,7 @@ body { background-color: #f8f9fa; }
   <button class="btn btn-link text-danger text-decoration-none p-0"
           data-bs-toggle="modal"
           data-bs-target="#expiredMedicineModal">
-    ❌ Expired Medicines
+    ❌ Expiring Medicines
   </button>
             </li>
 <p><?= $expiredCount ?></p>
@@ -339,7 +341,7 @@ document.getElementById('dateTime').textContent = new Date().toLocaleString();
 
       <div class="modal-header">
         <h5 class="modal-title" id="expiredMedicineModalLabel">
-          ❌ Expired Medicines
+          ❌ Expiring Medicines
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
@@ -350,18 +352,19 @@ document.getElementById('dateTime').textContent = new Date().toLocaleString();
             <tr>
               <th>#</th>
               <th>Medicine Name</th>
-              <th>Expiry Date</th>
+              <th>Expiry date</th>
               <th>Quantity</th>
             </tr>
           </thead>
           <tbody>
             <?php
             $stmt = $pdo->query("
-              SELECT m.name, m.expiry_date, ms.quantity
-              FROM medicines m
-              JOIN medicine_stock ms ON m.medicine_id = ms.medicine_id
-              WHERE m.expiry_date < CURDATE()
-              ORDER BY m.expiry_date ASC
+SELECT m.name, ms.stock_id, ms.quantity, ms.expire_date
+FROM medicines m
+JOIN medicine_stock ms ON m.medicine_id = ms.medicine_id
+WHERE ms.expire_date <= CURDATE() + INTERVAL 7 DAY 
+  AND ms.quantity > 0
+ORDER BY ms.expire_date ASC;
             ");
             $i = 1;
             $expiredMeds = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -373,7 +376,7 @@ document.getElementById('dateTime').textContent = new Date().toLocaleString();
                 <td><?= $i++ ?></td>
                 <td><?= htmlspecialchars($med['name']) ?></td>
                 <td class="text-danger">
-                  <?= date('d M Y', strtotime($med['expiry_date'])) ?>
+                  <?= date('d M Y', strtotime($med['expire_date'])) ?>
                 </td>
                 <td><?= $med['quantity'] ?></td>
               </tr>
@@ -383,7 +386,7 @@ document.getElementById('dateTime').textContent = new Date().toLocaleString();
             ?>
               <tr>
                 <td colspan="4" class="text-center text-success">
-                  ✅ No expired medicines
+                  ✅ No expiring medicines
                 </td>
               </tr>
             <?php endif; ?>
